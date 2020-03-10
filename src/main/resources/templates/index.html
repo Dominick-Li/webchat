@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <title>Hope.webChat主页</title>
+    <link rel="stylesheet" href="/static/css/wxchat/amazeui.min.css"/>
+    <link rel="stylesheet" href="/static/css/wxchat/main.css"/>
+    <style type="text/css">
+        .content {
+            display: none;
+            position: absolute;
+            top: 0px;
+        }
+
+        .windowBody_active {
+            display: inline;
+        }
+
+        .user_active {
+            background-color: #C0BFBF;
+        }
+
+        .group-user-item {
+            float: left;
+            margin: 5% 3%
+        }
+
+        .group-user-item dd {
+            width: 60px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <div class="wechat">
+        <div class="sidestrip">
+            <div class="am-dropdown" data-am-dropdown>
+                <!-----------------------------------------------------头像插件------------------------------------------------->
+                <div class="own_head am-dropdown-toggle"
+                     th:style="'background: url(\''+${user.headImg}+'\');background-size: 34px'"></div>
+                <input type="hidden" id="userId" th:value="${user.id}">
+                <input type="hidden" id="myHeadImg" th:value="${user.headImg}">
+                <input type="hidden" id="port" th:value="${port}">
+                <div class="am-dropdown-content">
+                    <div class="own_head_top">
+                        <div class="own_head_top_text">
+                            <p class="own_name"><span th:text="${user.nickname}"></span><img
+                                    th:src="'/static/images/icon/'+${user.getGenderEnum().image}" alt=""/></p>
+                            <p class="own_numb" th:text="'帐号：'+${user.wxCode}"></p>
+                        </div>
+                        <img th:src="${user.headImg}" alt=""/>
+                    </div>
+                    <div class="own_head_bottom">
+                        <p th:utext="'<span>地区</span>'+${user.address}"></p>
+                        <div class="own_head_bottom_img">
+                            <a href=""><img src="/static/images/icon/head_1.png"/></a>
+                            <a href=""><img src="/static/images/icon/head_2.png"/></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--三图标-->
+            <div class="sidestrip_icon">
+                <a id="si_1" style="background: url(/static/images/icon/head_2_1.png) no-repeat;"></a>
+                <a id="si_2"></a>
+                <a id="si_3"></a>
+            </div>
+
+            <!--底部扩展键-->
+            <div id="doc-dropdown-justify-js">
+                <div class="am-dropdown" id="doc-dropdown-js" style="position: initial;">
+                    <div class="sidestrip_bc am-dropdown-toggle"></div>
+                    <ul class="am-dropdown-content" style="">
+                        <li>
+                            <a href="#"
+                               data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0, width: 400, height: 225}">意见反馈</a>
+                            <div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-1">
+                                <div class="am-modal-dialog">
+                                    <div class="am-modal-hd">Modal 标题
+                                        <a href="javascript: void(0)" class="am-close am-close-spin"
+                                           data-am-modal-close>&times;</a>
+                                    </div>
+                                    <div class="am-modal-bd">
+                                        Modal 内容。本 Modal 无法通过遮罩层关闭。
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li><a href="#">备份与恢复</a></li>
+                        <li><a href="#">设置</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!------------------------------------------------------------聊天列表--------------------------------------------------------------->
+        <div class="middle on">
+            <div class="wx_search">
+                <input class="windowSearch" type="text" placeholder="搜索"/>
+                <button>+</button>
+            </div>
+            <div class="office_text">
+                <ul class="user_list" id="user_list">
+                    <li th:class="${iterStat.first?'user_active user_item':'user_item'}" th:name="${chatView.name}"
+                        th:id="${chatView.type+'_'+chatView.id}" th:each="chatView,iterStat :${chatViews}">
+                        <input type="hidden" th:id="${'uid_'+chatView.friendId}">
+                        <div class="user_head"><img th:src="${chatView.headImg}"/></div>
+                        <div class="user_text">
+                            <p class="user_name" th:text="${chatView.name}"></p>
+                            <p class="user_message" th:utext="${chatView.message}"></p>
+                        </div>
+                        <div class="user_time" th:text="${chatView.getLastDay()}"></div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!----------------------------------------------通讯录列表---------------------------------------------->
+        <div class="middle">
+            <div class="wx_search">
+                <input type="text" class="windowSearch" placeholder="搜索"/>
+                <button>+</button>
+            </div>
+            <div class="office_text">
+                <ul class="friends_list">
+                    <li>
+                        <p>新的朋友</p>
+                        <div class="friends_box">
+                            <div class="user_head"><img src="/static/images/head/1.jpg"/></div>
+                            <div class="friends_text">
+                                <p class="user_name">新的朋友</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <p>公众号</p>
+                        <div class="friends_box">
+                            <div class="user_head"><img src="/static/images/head/2.jpg"/></div>
+                            <div class="friends_text">
+                                <p class="user_name">公众号</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li th:each="mailEntry:${mailLists}">
+                        <p th:text="${mailEntry.key}"></p>
+                        <div class="friends_box" th:each="user:${mailEntry.value}">
+                            <input type="hidden" name="userId" th:value="${user.userId}">
+                            <div class="user_head"><img th:src="${user.headImg}"/></div>
+                            <div class="friends_text">
+                                <p class="user_name" th:text="${user.nickName}"></p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!--程序列表-->
+        <div class="middle">
+            <div class="wx_search">
+                <input type="text" class="windowSearch" placeholder="搜索收藏内容"/>
+                <button>+</button>
+            </div>
+            <div class="office_text">
+                <ul class="icon_list">
+                    <li class="icon_active">
+                        <div class="icon"><img src="/static/images/icon/icon.png" alt=""/></div>
+                        <span>全部收藏</span>
+                    </li>
+                    <li>
+                        <div class="icon"><img src="/static/images/icon/icon1.png" alt=""/></div>
+                        <span>链接</span>
+                    </li>
+                    <li>
+                        <div class="icon"><img src="/static/images/icon/icon2.png" alt=""/></div>
+                        <span>相册</span>
+                    </li>
+                    <li>
+                        <div class="icon"><img src="/static/images/icon/icon3.png" alt=""/></div>
+                        <span>笔记</span>
+                    </li>
+                    <li>
+                        <div class="icon"><img src="/static/images/icon/icon4.png" alt=""/></div>
+                        <span>文件</span>
+                    </li>
+                    <li>
+                        <div class="icon"><img src="/static/images/icon/icon5.png" alt=""/></div>
+                        <span>音乐</span>
+                    </li>
+                    <li>
+                        <div class="icon"><img src="/static/images/icon/icon6.png" alt=""/></div>
+                        <span>标签</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!--聊天窗口-->
+        <div class="talk_window">
+            <div class="windows_top">
+                <div class="windows_top_box">
+                    <span id="window-firendName" th:text="${chatViews[0].name}"></span>
+<!--                    <ul class="window_icon">-->
+<!--                        <li><a href=""><img src="/static/images/icon/icon7.png"/></a></li>-->
+<!--                        <li><a href=""><img src="/static/images/icon/icon8.png"/></a></li>-->
+<!--                        <li><a href=""><img src="/static/images/icon/icon9.png"/></a></li>-->
+<!--                        <li><a href=""><img src="/static/images/icon/icon10.png"/></a></li>-->
+<!--                    </ul>-->
+                    <div class="extend" id="group-common" data-am-offcanvas="{target: '#doc-oc-demo3'}">
+                    </div>
+                    <!-- 侧边栏内容 -->
+                    <div id="doc-oc-demo3" class="am-offcanvas">
+                        <div class="am-offcanvas-bar am-offcanvas-bar-flip">
+                            <div class="am-offcanvas-content" style="padding-left: 8%;">
+                                <div th:each="gcs:${groupChats}" th:id="${'group-users-'+gcs.id}" class="groupusers"
+                                     style="display: none">
+                                    <table>
+                                        <tr style="margin-top: 5%">
+                                            <td style="width: 60px;height: 25px">群名称</td>
+                                            <th th:utext="${gcs.groupName}"></th>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 60px;height: 25px">创建时间</td>
+                                            <th th:utext="${gcs.getCreateDate()}"></th>
+                                        </tr>
+                                    </table>
+                                    <p>群成员</p>
+                                    <dl th:each="gc:${gcs.groupChatUsers}" class="group-user-item">
+                                        <dt><img width="60px" height="60px" th:src="${gc.user.headImg}"></dt>
+                                        <dd th:text="${gc.user.nickname}"></dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!------------------------------------------------------------聊天内容------------------------------------------------------------------------------------->
+            <div class="windows_body">
+                <div class="office_text" style="height: 100%;" id="chatbox">
+                    <ul th:each="chatMain,iterStat :${chatMainList}" class="content" th:name="${chatMain.friendId}"
+                        th:id="${'mailBody_'+chatMain.id}">
+                        <li th:each="message :${chatMain.chatMessageList}"
+                            th:class="${message.chatMainId==chatMain.id}?'me':'other'">
+                            <img th:src="${message.chatMainId==chatMain.id?user.headImg:chatMain.friendHeadImg}"
+                                 th:title="${message.chatMainId==chatMain.id?user.nickname:chatMain.friendnameRemarks}"><span
+                                th:utext="${message.content}"></span>
+                        </li>
+                    </ul>
+                    <ul th:each="groupChat:${groupChats}" class="content" th:name="${groupChat.id}"
+                        th:id="${'groupBody_'+groupChat.id}">
+                        <li th:each="message :${groupChat.groupMessages}"
+                            th:class="${message.user.id==user.id}?'me':'other'">
+                            <p th:text="${message.user.nickname}"
+                               th:style="${message.user.id!=user.id?'padding-left:12%':''}"></p>
+                            <img th:src="${message.user.headImg}" th:title="${message.user.nickname}"><span
+                                th:utext="${message.content}"></span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="windows_input" id="talkbox">
+                <div class="input_icon">
+                    <a class="emotion btn" href="javascript:;"></a>
+                    <a href="javascript:;"></a>
+                    <a href="javascript:;"></a>
+                    <a href="javascript:;"></a>
+                    <a href="javascript:;"></a>
+                    <a href="javascript:;"></a>
+                </div>
+                <div class="input_box">
+                    <textarea name="" rows="" cols="" id="input_box"></textarea>
+                    <button id="send">发送（S）</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/amazeui.min.js"></script>
+<script type="text/javascript" src="/static/js/zUI.js"></script>
+<script type="text/javascript" src="/static/js/wechat.js"></script>
+<script type="text/javascript" src="/static/qqbq/jquery.qqFace.js"></script>
+
+<script type="text/javascript">
+    // by zhengkai.blog.csdn.net
+    var websocket;
+    if (!window.WebSocket) {
+        window.WebSocket = window.MozWebSocket;
+    }
+    if (window.WebSocket) {
+        websocket = new WebSocket("ws://127.0.0.1:"+$("#port").val()+"/ws?userId=" + $("#userId").val());
+        websocket.onmessage = function (event) {
+            var json = JSON.parse(event.data);
+            chat.onmessage(json);
+        };
+        websocket.onopen = function (event) {
+            console.log("Netty-WebSocket服务器。。。。。。连接");
+        };
+        websocket.onclose = function (event) {
+            console.log("Netty-WebSocket服务器。。。。。。关闭");
+        };
+    } else {
+        alert("您的浏览器不支持WebSocket协议！");
+    }
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function () {
+        if (websocket != null) {
+            websocket.close();
+        }
+    };
+
+    var btn = document.getElementById("group-common");
+    btn.onclick = function () {
+        var id = $(".windowBody_active").attr("id");
+        id = id.substring(id.indexOf("_") + 1);
+        $(".groupusers").hide();
+        $("#group-users-" + id).show();
+    }
+
+</script>
+</html>
