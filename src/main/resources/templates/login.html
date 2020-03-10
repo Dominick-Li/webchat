@@ -163,10 +163,10 @@
     });
 
     $("#loginform").submit(function () {
-        // if ($("[name='vercode']").val() != $(".zylVerCode").html()) {
-        //     layer.msg("验证码错误,请重新输入!", {icon: 2, closeBtn: 0});
-        //     return false;
-        // }
+        if ($("[name='vercode']").val() != $(".zylVerCode").html()) {
+            layer.msg("验证码错误,请重新输入!", {icon: 2, closeBtn: 0});
+            return false;
+        }
         $.ajax({
             type: 'post',
             url: "/user/login",
