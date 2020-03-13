@@ -30,8 +30,8 @@ public class UserController {
     @Autowired
     private ChatService chatService;
 
-    @Value("${netty.port}")
-    private String port;
+    @Value("${netty.ws}")
+    private String ws;
 
     /**
      * 查询用户拥有的好友信息
@@ -43,7 +43,7 @@ public class UserController {
         //通讯录信息
         model.addAttribute("mailLists",chatService.findByMailListByUserId(user.getId()));
         //注入websocket端口
-        model.addAttribute("port",port);
+        model.addAttribute("ws",ws);
         //组装群聊和私聊信息
         chatService.findChatViewByUserId(user.getId(),model);
         return "index";

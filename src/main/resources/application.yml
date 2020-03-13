@@ -3,7 +3,7 @@ server:
 
 netty:
   port: 11111
-
+  ws: ws://127.0.0.1:${netty.port}/ws
 tomcat:
   remote-ip-header: x-forward-for
 

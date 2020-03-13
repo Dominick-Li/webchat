@@ -48,7 +48,7 @@
                      th:style="'background: url(\''+${user.headImg}+'\');background-size: 34px'"></div>
                 <input type="hidden" id="userId" th:value="${user.id}">
                 <input type="hidden" id="myHeadImg" th:value="${user.headImg}">
-                <input type="hidden" id="port" th:value="${port}">
+                <input type="hidden" id="ws" th:value="${ws}">
                 <div class="am-dropdown-content">
                     <div class="own_head_top">
                         <div class="own_head_top_text">
@@ -305,7 +305,7 @@
         window.WebSocket = window.MozWebSocket;
     }
     if (window.WebSocket) {
-        websocket = new WebSocket("ws://127.0.0.1:"+$("#port").val()+"/ws?userId=" + $("#userId").val());
+        websocket = new WebSocket($("#ws").val()+"?userId=" + $("#userId").val());
         websocket.onmessage = function (event) {
             var json = JSON.parse(event.data);
             chat.onmessage(json);
