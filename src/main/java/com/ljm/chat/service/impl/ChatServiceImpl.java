@@ -37,7 +37,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public LinkedHashMap<String, ArrayList<MailListView>> findByMailListByUserId(Integer userId) {
-        List<MailList> mailLists=mailListRepository.findByUserIdAndFriendStatu(userId, FriendStatu.Added.getStatuCode());
+        List<MailList> mailLists=mailListRepository.findByUserIdAndFriendStatu(userId, FriendStatu.Added);
         return MailSortUtil.MailListOrders(mailLists);
     }
 

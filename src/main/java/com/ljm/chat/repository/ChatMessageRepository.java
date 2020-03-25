@@ -10,4 +10,6 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage,Integer
 
         List<ChatMessage>  findByChatMainId(Integer chatMainId);
 
+
+
 }

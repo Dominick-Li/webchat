@@ -53,7 +53,7 @@
                     <div class="own_head_top">
                         <div class="own_head_top_text">
                             <p class="own_name"><span th:text="${user.nickname}"></span><img
-                                    th:src="'/static/images/icon/'+${user.getGenderEnum().image}" alt=""/></p>
+                                    th:src="'/static/images/icon/'+${user.gender.image}" alt=""/></p>
                             <p class="own_numb" th:text="'帐号：'+${user.wxCode}"></p>
                         </div>
                         <img th:src="${user.headImg}" alt=""/>

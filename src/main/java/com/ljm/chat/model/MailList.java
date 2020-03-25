@@ -22,7 +22,7 @@ public class MailList extends BaseModel {
     public MailList(Integer userId,Integer friendId,String nameRemarks,FriendStatu friendStatu){
         this.userId=userId;
         this.friendId=friendId;
-        this.friendStatu=friendStatu.getStatuCode();
+        this.friendStatu=friendStatu;
         this.nameRemarks=nameRemarks;
         this.setCreateTime(System.currentTimeMillis());
     }
@@ -44,10 +44,10 @@ public class MailList extends BaseModel {
      */
     private Integer msgTop;
     /**
-     *是否添加,0未添加,1已添加,2黑名单
+     *好友状态标识
      */
-    private int friendStatu;
-
+    @Convert(converter = FriendStatu.Converter.class)
+    private FriendStatu friendStatu;
 
     /**
      *级联加载用户信息
@@ -96,11 +96,11 @@ public class MailList extends BaseModel {
         this.msgTop = msgTop;
     }
 
-    public int getFriendStatu() {
+    public FriendStatu getFriendStatu() {
         return friendStatu;
     }
 
-    public void setFriendStatu(int friendStatu) {
+    public void setFriendStatu(FriendStatu friendStatu) {
         this.friendStatu = friendStatu;
     }
 }

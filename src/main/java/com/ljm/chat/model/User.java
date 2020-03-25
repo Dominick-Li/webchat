@@ -3,10 +3,7 @@ package com.ljm.chat.model;
 import com.ljm.chat.model.base.BaseModel;
 import com.ljm.chat.enums.Gender;
 
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * @author Dominick Li
@@ -22,7 +19,7 @@ public class User  extends BaseModel {
     public User(){
 
     }
-    public User(String username,String password,String nickname,Integer gender){
+    public User(String username,String password,String nickname,Gender gender){
         this.username=username;
         this.password=password;
         this.nickname=nickname;
@@ -73,9 +70,10 @@ public class User  extends BaseModel {
      */
     private String wxCode;
     /**
-     *性别 0男 1女
+     *性别
      */
-    private Integer gender;
+    @Convert(converter = Gender.Converter.class)
+    private Gender gender;
 
     public String getUsername() {
         return username;
@@ -157,16 +155,11 @@ public class User  extends BaseModel {
         this.wxCode = wxCode;
     }
 
-    public Integer getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
-    }
-
-    @Transient
-    public Gender getGenderEnum(){
-        return Gender.valueOf(gender);
     }
 }

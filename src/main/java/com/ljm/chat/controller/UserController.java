@@ -68,8 +68,9 @@ public class UserController {
     @ResponseBody
     public ResResult register(String username, String password, String nickname, HttpSession session, HttpServletRequest request){
         //String contentPath=request.getServletContext().getRealPath("/");
-        String contentPath="D:/JavaProject/webchat/src/main/resources/";
-        return  userService.register(new User(username,password,nickname, Gender.Male.getCode()),session,contentPath);
+        //idea环境写死,部署在服务器上面的话就根据request去拿扣下
+        String contentPath="D:/163@github/webchat/src/main/resources/";
+        return  userService.register(new User(username,password,nickname, Gender.Male),session,contentPath);
     }
 
 

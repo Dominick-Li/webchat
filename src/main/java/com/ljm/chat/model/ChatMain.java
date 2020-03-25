@@ -54,6 +54,10 @@ public class ChatMain  extends BaseModel {
     private List<ChatMessage> chatMessageList;
 
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name="userId")
+    private List<User> users;
+
     public Integer getUserId() {
         return userId;
     }

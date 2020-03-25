@@ -1,11 +1,14 @@
 package com.ljm.chat.enums;
 
+import com.ljm.chat.enums.converter.AbstractEnumConverter;
+import com.ljm.chat.enums.converter.PersistEnum2DB;
+
 /**
  * @Author Dominick Li
  * @DateTime 2020/3/1 17:21
  * @Description 性别枚举
  **/
-public enum  Gender {
+public enum  Gender implements PersistEnum2DB<Integer> {
 
     Male(0,"男","male.png"),
     FeMale(1,"女","female.png"),
@@ -61,4 +64,15 @@ public enum  Gender {
         }
     }
 
+    @Override
+    public Integer getData() {
+        return code;
+    }
+
+    public static class Converter extends AbstractEnumConverter<Gender, Integer> {
+
+        public Converter() {
+            super(Gender.class);
+        }
+    }
 }

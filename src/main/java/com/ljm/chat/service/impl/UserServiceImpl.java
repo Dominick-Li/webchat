@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
             for(GroupChatUser groupChatUser:groupChatUsers){
                 imgPathList.add(contentPath+groupChatUser.getUser().getHeadImg());
             }
-            imgPathList.add(contentPath+"/static/images/userhead/h4.png");
+            imgPathList.add(contentPath+"static/images/userhead/h4.png");
             String groupName=GROUPIMGPATH+groupChat.getId()+".png";
             String outPath=contentPath+groupName;
             try {
