@@ -5,15 +5,16 @@
 
 ###########功能特效  
 包含登录,注册,私聊,群聊等功能,后续会更新加好友,创建群聊等功能.以下是当前核心功能截图  
-登录注册页面
-![登录注册页面](https://github.com/Dominick-Li/webchat/blob/master/demoImg/login.png)
+登录注册页面  
+![登录注册](http://47.93.178.70:9000/uploads/docs/login.png) 
 
-私聊效果图
-![私聊页面](https://github.com/Dominick-Li/webchat/blob/master/demoImg/chat.png)
+私聊效果图  
+![私聊](http://47.93.178.70:9000/uploads/docs/chat.png) 
 
-群聊效果图
-![私聊页面1](https://github.com/Dominick-Li/webchat/blob/master/demoImg/groupChat1.png)
-![私聊页面2](https://github.com/Dominick-Li/webchat/blob/master/demoImg/groupChat2.png)
+群聊效果图  
+![群聊1](http://47.93.178.70:9000/uploads/docs/groupChat1.png) 
+
+![群聊2](http://47.93.178.70:9000/uploads/docs/groupChat2.png) 
 
 ###########环境依赖  
 jdk 1.8以上  
