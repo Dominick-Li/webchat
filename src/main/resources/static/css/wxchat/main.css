@@ -647,11 +647,14 @@ ul.am-dropdown-content>li>a:focus, ul.am-dropdown-content>li>a:hover{
     border-radius: 2px; 
 }
 
-.me span { 
+.me div {
     float: right;
     background: #9eea6a;
 }
-
+.me div img,.other div img,.user_message img{
+	width: 20px;
+	height: 20px;
+}
 .me{
     margin-top: 10px;
     padding-left: 10px;
@@ -662,7 +665,8 @@ ul.am-dropdown-content>li>a:focus, ul.am-dropdown-content>li>a:hover{
     margin-bottom:5px;
 }
 
-.me span{
+.me div{
+	display: table;
     background: #9eea6a;
     padding:7px;
     border-radius:4px;
@@ -672,7 +676,7 @@ ul.am-dropdown-content>li>a:focus, ul.am-dropdown-content>li>a:hover{
     position: relative;
 }
 
-.me span:before{
+.me div:before{
     content: " ";
     position: absolute;
     top: 9px;
@@ -691,10 +695,7 @@ ul.am-dropdown-content>li>a:focus, ul.am-dropdown-content>li>a:hover{
     border-radius: 2px; 
 }
 
-.other span { 
-    float: right;
-    background: #9eea6a;
-}
+
 
 .other{
     margin-top: 10px;
@@ -709,7 +710,8 @@ ul.am-dropdown-content>li>a:focus, ul.am-dropdown-content>li>a:hover{
 .other img {
     float: left;
 }
-.other span{
+.other div{
+	display: table;
     background: #fff;
     padding:7px;
     border-radius:4px;
@@ -720,7 +722,7 @@ ul.am-dropdown-content>li>a:focus, ul.am-dropdown-content>li>a:hover{
     position: relative;
 }
 
-.other span:before{
+.other div:before{
     content:"";
     position: absolute;
     top: 9px;
@@ -731,6 +733,30 @@ ul.am-dropdown-content>li>a:focus, ul.am-dropdown-content>li>a:hover{
     right: 100%;
 }
 
+.editDiv{
+	margin-left: 20px;
+	margin-right: 20px;
+	overflow-y:auto;
+	overflow-x:hidden;
+	height: calc(100% - 45px);
+}
+.editDiv:focus{
+	border:solid 1px transparent;
+	outline:none;
+}
+
+#input_box{
+	width:calc(100% - 60px);
+	margin-left: 20px;
+	margin-right: 20px;
+	overflow-y:auto;
+	overflow-x:hidden;
+	height: calc(100% - 45px);
+	-webkit-user-select:text
+}
+#input_box:focus{
+	border:none;outline:none;
+}
 
 
 

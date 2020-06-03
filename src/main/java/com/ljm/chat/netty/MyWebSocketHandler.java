@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -74,8 +75,9 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         if (null != msg && msg instanceof FullHttpRequest) {
             FullHttpRequest request = (FullHttpRequest) msg;
             String uri = request.uri();
-            Integer userId = getUrlParams(uri);
-            userMap.put(getUrlParams(uri), ctx.channel().id());
+            HashMap param = getUrlParams(uri);
+            Integer userId = Integer.parseInt(param.get("userId").toString());
+            userMap.put(userId, ctx.channel().id());
             logger.info("登录的用户id是：{}", userId);
             //第1次登录,需要查询下当前用户是否加入过群,加入过群,则放入对应的群聊里
             List<Integer> groupIds = groupChatRepository.findGroupIdByUserId(userId);
@@ -130,12 +132,18 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
     }
 
-    private static Integer getUrlParams(String url) {
+    private HashMap getUrlParams(String url) {
         if (!url.contains("=")) {
             return null;
         }
-        String userId = url.substring(url.indexOf("=") + 1);
-        return Integer.parseInt(userId);
+        HashMap map = new HashMap();
+        String param = url.substring(url.indexOf("?") + 1);
+        String arr[] = param.split("&");
+        for (String str : arr) {
+            String s[] = str.split("=");
+            map.put(s[0], s[1]);
+        }
+        return map;
     }
 
 }

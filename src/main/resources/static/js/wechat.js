@@ -5,30 +5,59 @@
  * sendMessage    发送消息推送给websocket
  * openNews       消息列表左侧置顶
  * onmessage      接受来自服务端推送的消息,并显示在页面
- * replace_em     把表情内容替换成对应的img图片
  * refreshMsgBody 让最新的聊天消息一直处于可见
  * searchMail     模糊查询好友信息
+ * createMsgBody  构建聊天内容主题
  * */
 var chat = {
     messageType: "mail",
     qqbqPath: "/static/qqbq/arclist/",
     openNewsIng: false,
+    createMsgBody:function(jsonData){
+        //创建左边的信息
+        let li=`<li class="user_item" name="`+jsonData.userId+`"  id="mail_`+jsonData.userId+`">`+
+            ` <input type="hidden" id=uid_`+jsonData.userId+`>`+
+            `<div class="user_head"><img src="/static/images/userhead/h3.png"/></div>`+
+            `<div class="user_text">`+
+                `<div class="user_name">`+jsonData.userId+`</div>`+
+                `<div class="user_message"></div>`+
+            `</div>`+
+            `<div class="user_time"></div>`+
+            `</li>`;
+          $("#user_list").append(li);
+        //创建右边的消息主题
+        let body=`<ul  class="content" name="`+jsonData.userId+`" ></ul>`;
+        $("#chatbox").append(body);
+    },
     sendMessage: function () {
-        var text = $("#input_box").val(); //发送的内容
+        if ($('#input_box font').length > 0) {
+            $('#input_box font').before($('#input_box font').text())
+            $('#input_box font').remove()
+        }
+        if ($('#input_box span').length > 0) {
+            $('#input_box span').before($('#input_box span').text())
+            $('#input_box span').remove()
+        }
+        if ($('#input_box pre').length > 0) {
+            $('#input_box pre').before($('#input_box pre').text())
+            $('#input_box pre').remove()
+        }
+        var text = $("#input_box").html(); //发送的内容
         if (text == "") {
             alert('不能发送空消息');
             return;
         }
-        text = this.replace_em(text);
-        var liHtml = '<li class="me"><img src="' + $("#myHeadImg").val() + '"><span>' + text + '</span></li>';
+        var liHtml = '<li class="me"><img src="' + $("#myHeadImg").val() + '"> <div contenteditable="true" class="editDiv">'+text+'</div></li>';
         $(".windowBody_active").append(liHtml);
-        ;
-        this.refreshMsgBody();
         var chatMainId = $(".windowBody_active").attr("id"); //聊天主表id
+        if(chatMainId==undefined){
+            return;
+        }
+        this.refreshMsgBody();
         if (!window.WebSocket) {
             return;
         }
-        $("#input_box").val("");
+        $("#input_box").html("");
         if (websocket.readyState == WebSocket.OPEN) {
             var data = {};
             data.chatMainId = chatMainId.substring(chatMainId.indexOf("_") + 1);
@@ -40,7 +69,7 @@ var chat = {
             data.headImg = $("#myHeadImg").val();
             data.messageType = this.messageType;
             websocket.send(JSON.stringify(data));
-            var $userlist = $("#" + messageType + "_" + data.chatMainId);
+            var $userlist = $("#" + this.messageType + "_" + data.chatMainId);
             $userlist.find(".user_message").html(text);
             $userlist.find(".user_time").html(getHourTime());
         } else {
@@ -50,12 +79,13 @@ var chat = {
     openNews: function (obj) {
         try {
             if (this.openNewsIng) {
+                console.log("return ....")
                 return;
             }
             this.openNewsIng = true;
             $(".windowBody_active").removeClass("windowBody_active");
             var id = obj.attr("id").substring(obj.attr("id").indexOf("_") + 1);
-            if (obj.attr("id").indexOf("mail")!=-1) {
+            if (obj.attr("id").indexOf("mail") != -1) {
                 //打开私聊的窗口
                 $("#mailBody_" + id).addClass("windowBody_active");
                 this.messageType = "mail";
@@ -69,13 +99,8 @@ var chat = {
             $(".user_active").removeClass("user_active");
             $("#window-firendName").text(obj.attr("name"));
             obj.addClass("user_active");
-            //把当前消息往上面顶,如果有设置置顶,放到置顶的下面
-            var clonedNode = document.getElementById(obj.attr("id")).cloneNode(true);
-            obj.remove();
-            clonedNode.onclick = function () {
-                chat.openNews($(this));
-            }
-            $(".user_list").prepend(clonedNode);
+            //把当前消息放到首发位
+             $(".user_list").prepend(obj);
             chat.refreshMsgBody();
             this.openNewsIng = false;
         } catch (e) {
@@ -91,6 +116,10 @@ var chat = {
         } else {
             id = "#" + jsonData.messageType + "_" + jsonData.chatMainId;
         }
+        //如果消息窗口不存在,则构建聊天窗口
+        if($(id).length==0){
+            this.createMsgBody(jsonData);
+        }
         var $userlist = jsonData.messageType == "mail" ? $(id).parent() : $(id);
         $userlist.find(".user_message").html(jsonData.message);
         $userlist.find(".user_time").html(jsonData.lastDay);
@@ -99,16 +128,9 @@ var chat = {
             return;
         }
         this.openNews($userlist);
-        var liHtml = '<li class="other"><img src="' + jsonData.headImg + '"><span>' + jsonData.message + '</span></li>';
+        var liHtml = '<li class="other"><img src="' + jsonData.headImg + '">  <div contenteditable="true" class="editDiv">'+jsonData.message+'</div></li>';
         $(".windowBody_active").append(liHtml);
         this.refreshMsgBody();
-    },
-    replace_em: function (str) {
-        str = str.replace(/\</g, '&lt;');
-        str = str.replace(/\>/g, '&gt;');
-        str = str.replace(/\n/g, '<br/>');
-        str = str.replace(/\[em_([0-9]*)\]/g, '<img style="width: 20px;height: 20px" src="' + this.qqbqPath + '/$1.gif" border="0" />');
-        return str;
     },
     refreshMsgBody: function () {
         var chatbox = $("#chatbox").css("height");
@@ -159,15 +181,10 @@ function keyDownSearch(e) {
 
 
 $(function () {
-     var obj=$("#user_list").find("li:first");
-      var liid = obj.attr("id").substring(obj.attr("id").indexOf("_") + 1);
-     if(obj.attr("id").indexOf("group")==-1){
-         $("#group-common").hide();
-         $("#mailBody_"+liid).addClass("windowBody_active");
-     }else{
-         $("#groupBody_"+liid).addClass("windowBody_active");
-     }
-
+    $(".editDiv").on("keypress",function (e) {
+        e.preventDefault();
+    });
+    $('#doc-dropdown-js').dropdown({justify: '#doc-dropdown-justify-js'});
 
     $(".windowSearch").focus(function () {
         $(".middle").hide();
@@ -177,13 +194,13 @@ $(function () {
     $(".windowSearch").keyup(function () {
         chat.searchMail(this);
     });
-    //chat.searchMail();
+
     $('.emotion').qqFace({
         id: 'facebox',
         assign: 'input_box',
         path: chat.qqbqPath	//表情存放的路径
     });
-    //$(".own_hea").css("background","url("+headImg+")");
+
     //左边的三图标
     var si1 = document.getElementById('si_1');
     var si2 = document.getElementById('si_2');
@@ -204,7 +221,6 @@ $(function () {
         si2.style.background = "";
     };
 
-    $('#doc-dropdown-js').dropdown({justify: '#doc-dropdown-justify-js'});
 
     $(".office_text").panel({iWheelStep: 32});
 
@@ -212,20 +228,37 @@ $(function () {
         $(".sidestrip_icon a").eq($(this).index()).addClass("cur").siblings().removeClass('cur');
         $(".middle").hide().eq($(this).index()).show();
     });
-    $("#input_box").focus(function () {
+
+    $("#input_box").hover(()=>{
         $('.windows_input').css('background', '#fff');
         $('#input_box').css('background', '#fff');
-    });
-    $("#input_box").blur(function () {
+    },()=>{
         $('.windows_input').css('background', '');
         $('#input_box').css('background', '');
     });
 
-    chat.refreshMsgBody();
+    var obj = $("#user_list").find("li:first");
+    if (obj.length!=0) {
+        var liid = obj.attr("id").substring(obj.attr("id").indexOf("_") + 1);
+        if (obj.attr("id").indexOf("group") == -1) {
+            $("#group-common").hide();
+            $("#mailBody_" + liid).addClass("windowBody_active");
+        } else {
+            $("#groupBody_" + liid).addClass("windowBody_active");
+        }
+        chat.refreshMsgBody();
+    }
+
     $(".user_item").click(function () {
         // $(this).siblings(":hidden").show();
+        var index = [].indexOf.call(this.parentNode.querySelectorAll(this.tagName), this);
+        if(index==0){
+            //如果已经是第一个元素,则不做置顶操作
+            return;
+        }
         chat.openNews($(this))
     });
+
     $("#send").click(function () {
         chat.sendMessage();
     });

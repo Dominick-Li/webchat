@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * @author Dominick Li
  * @createTime 2020/3/4 17:33
- * @description 根据好友列表的备注和昵称排序, 备注权重大于昵称
+ * @description 根据好友列表的备注和昵称排序, 有备注按照备注排序->没有备注按照昵称排序
  **/
 public class MailSortUtil {
 
@@ -28,7 +28,6 @@ public class MailSortUtil {
     /**
      * 获取首字母
      */
-
     public static char ChineseToFirstLetter(char c){
             String d = String.valueOf(c);
             String str = converterToFirstSpell(d);
@@ -161,6 +160,7 @@ public class MailSortUtil {
         List<MailList> list =new ArrayList<>();
         MailList user0=new MailList();
         user0.setNameRemarks("123123");
+
         MailList user1=new MailList();
         user1.setNameRemarks("男朋友");
         MailList user2=new MailList();

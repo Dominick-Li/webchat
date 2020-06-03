@@ -53,4 +53,8 @@ spring:
   application:
     name: webchat
 
+#指定logback配置文件路径,不指定的话默认是在resouces目录下
+logging:
+  config: conf/logback-spring.xml
+
 

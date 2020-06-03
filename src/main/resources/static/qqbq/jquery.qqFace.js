@@ -19,7 +19,7 @@
         }
 
         $(this).click(function (e) {
-            var strFace, labFace;
+            var strFace, labFace,imgFace;
             if ($('#' + id).length <= 0) {
                 strFace = '<div id="' + id + '" style="position:absolute;display:none;z-index:1000;background-color: #fff;border-radis:6px;padding: 7px" class="qqFace">' +
                     '<table border="0" cellspacing="0" cellpadding="0"><tr>';
@@ -28,7 +28,8 @@
                     //     continue;
                     // }
                     labFace = '[' + tip + i + ']';
-                    strFace += '<td><img src="' + path + i + '.gif" onclick="$(\'#' + option.assign + '\').setCaret();$(\'#' + option.assign + '\').insertAtCaret(\'' + labFace + '\');" /></td>';
+                    imgFace=`<img src=`+path + i + `.gif>`;
+                    strFace += '<td><img src="' + path + i + '.gif" onclick="$(\'#' + option.assign + '\').insertAtCaret(\'' + imgFace + '\');" /></td>';
                     if (i % 15 == 0) strFace += '</tr><tr>';
                 }
                 strFace += '</tr></table></div>';
@@ -38,7 +39,7 @@
             var top = offset.top + $(this).outerHeight();
             console.log(top);
             $('#' + id).css('top', top-156);
-            $('#' + id).css('left', offset.left-128);
+            $('#' + id).css('left', offset.left-20);
             $('#' + id).show();
             e.stopPropagation();
         });
@@ -77,12 +78,26 @@ jQuery.fn.extend({
             }
         });
     },
-    setCaret: function (path) {
-        var initSetCaret = function () {
-            var textObj = $(this).get(0);
-            textObj.caretPos = document.selection.createRange().duplicate();
-        };
-        $(this).click(initSetCaret).select(initSetCaret).keyup(initSetCaret);
+    set_focus: function () {
+            el= $(this).get(0);
+            el.focus();
+            if($.support.msie)
+            {
+                var range = document.selection.createRange();
+                this.last = range;
+                range.moveToElementText(el);
+                range.select();
+                document.selection.empty(); //取消选中
+            }
+            else
+            {
+                var range = document.createRange();
+                range.selectNodeContents(el);
+                range.collapse(false);
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
     },
 
     insertAtCaret: function (textFeildValue) {
@@ -96,14 +111,14 @@ jQuery.fn.extend({
             var rangeEnd = textObj.selectionEnd;
             var tempStr1 = textObj.value.substring(0, rangeStart);
             var tempStr2 = textObj.value.substring(rangeEnd);
-            textObj.value = tempStr1 + textFeildValue + tempStr2;
+            textObj.innerHTML = tempStr1 + textFeildValue + tempStr2;
             textObj.focus();
             var len = textFeildValue.length;
             textObj.setSelectionRange(rangeStart + len, rangeStart + len);
             textObj.blur();
         } else {
-            textObj.value += textFeildValue;
+            textObj.innerHTML += textFeildValue;
         }
-        $(textObj).focus();
+        this.set_focus();
     }
 });

@@ -36,12 +36,16 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .user_message{
+            width: 100px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+        }
     </style>
 </head>
 <body>
 <div class="box">
     <div class="wechat">
         <div class="sidestrip">
+
             <div class="am-dropdown" data-am-dropdown>
                 <!-----------------------------------------------------头像插件------------------------------------------------->
                 <div class="own_head am-dropdown-toggle"
@@ -67,6 +71,7 @@
                     </div>
                 </div>
             </div>
+
             <!--三图标-->
             <div class="sidestrip_icon">
                 <a id="si_1" style="background: url(/static/images/icon/head_2_1.png) no-repeat;"></a>
@@ -211,12 +216,12 @@
             <div class="windows_top">
                 <div class="windows_top_box">
                     <span id="window-firendName" th:text="${chatViews[0].name}"></span>
-<!--                    <ul class="window_icon">-->
-<!--                        <li><a href=""><img src="/static/images/icon/icon7.png"/></a></li>-->
-<!--                        <li><a href=""><img src="/static/images/icon/icon8.png"/></a></li>-->
-<!--                        <li><a href=""><img src="/static/images/icon/icon9.png"/></a></li>-->
-<!--                        <li><a href=""><img src="/static/images/icon/icon10.png"/></a></li>-->
-<!--                    </ul>-->
+                    <ul class="window_icon">
+                        <li><a href=""><img src="/static/images/icon/icon7.png"/></a></li>
+                        <li><a href=""><img src="/static/images/icon/icon8.png"/></a></li>
+                        <li><a href=""><img src="/static/images/icon/icon9.png"/></a></li>
+                        <li><a href=""><img src="/static/images/icon/icon10.png"/></a></li>
+                    </ul>
                     <div class="extend" id="group-common" data-am-offcanvas="{target: '#doc-oc-demo3'}">
                     </div>
                     <!-- 侧边栏内容 -->
@@ -256,8 +261,8 @@
                         <li th:each="message :${chatMain.chatMessageList}"
                             th:class="${message.chatMainId==chatMain.id}?'me':'other'">
                             <img th:src="${message.chatMainId==chatMain.id?user.headImg:chatMain.friendHeadImg}"
-                                 th:title="${message.chatMainId==chatMain.id?user.nickname:chatMain.friendnameRemarks}"><span
-                                th:utext="${message.content}"></span>
+                                 th:title="${message.chatMainId==chatMain.id?user.nickname:chatMain.friendnameRemarks}">
+                            <div contenteditable="true" class="editDiv" th:utext="${message.content}"></div>
                         </li>
                     </ul>
                     <ul th:each="groupChat:${groupChats}" class="content" th:name="${groupChat.id}"
@@ -266,11 +271,10 @@
                             th:class="${message.user.id==user.id}?'me':'other'">
                             <p th:text="${message.user.nickname}"
                                th:style="${message.user.id!=user.id?'padding-left:12%':''}"></p>
-                            <img th:src="${message.user.headImg}" th:title="${message.user.nickname}"><span
-                                th:utext="${message.content}"></span>
+                            <img th:src="${message.user.headImg}" th:title="${message.user.nickname}">
+                            <div contenteditable="true" class="editDiv" th:utext="${message.content}"></div>
                         </li>
                     </ul>
-
                 </div>
             </div>
             <div class="windows_input" id="talkbox">
@@ -283,7 +287,7 @@
                     <a href="javascript:;"></a>
                 </div>
                 <div class="input_box">
-                    <textarea name="" rows="" cols="" id="input_box"></textarea>
+                    <div   contenteditable="true" id="input_box" ></div>
                     <button id="send">发送（S）</button>
                 </div>
             </div>
@@ -299,7 +303,6 @@
 <script type="text/javascript" src="/static/qqbq/jquery.qqFace.js"></script>
 
 <script type="text/javascript">
-    // by zhengkai.blog.csdn.net
     var websocket;
     if (!window.WebSocket) {
         window.WebSocket = window.MozWebSocket;
