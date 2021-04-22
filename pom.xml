@@ -20,7 +20,7 @@
         <commons-lang3.version>3.7</commons-lang3.version>
         <netty-version>4.1.36.Final</netty-version>
         <pinyin4j.version>2.5.0</pinyin4j.version>
-        <fastjson.version>1.2.14</fastjson.version>
+        <fastjson.version>1.2.25</fastjson.version>
     </properties>
 
     <dependencies>
