@@ -10,7 +10,7 @@ tomcat:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/webchat?useSSL=false&serverTimezone=GMT%2b8&characterEncoding=utf8&connectTimeout=10000&socketTimeout=3000&autoReconnect=true
+    url: jdbc:mysql://localhost:3306/webchat?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=GMT%2b8&characterEncoding=utf8&connectTimeout=10000&socketTimeout=3000&autoReconnect=true
     username: root
     password: 123456
     type: com.zaxxer.hikari.HikariDataSource
@@ -24,7 +24,7 @@ spring:
       #连接池最大连接数，默认是10
       maximum-pool-size: 30
       #空闲连接超时时间，默认值600000（10分钟），大于等于max-lifetime且max-lifetime>0，会被重置为0；不等于0且小于10秒，会被重置为10秒。
-      idle-timeout: 180000
+      idle-timeout: 600000
       #连接最大存活时间，不等于0且小于30秒，会被重置为默认值30分钟.设置应该比mysql设置的超时时间短
       max-lifetime: 1800000
       #连接超时时间：毫秒，小于250毫秒，否则被重置为默认值30秒

@@ -110,7 +110,7 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <copy todir="dist" overwrite="true">
+                                <copy todir="release" overwrite="true">
                                     <fileset dir="${project.build.directory}" erroronmissingdir="false">
                                         <include name="*.jar"/>
                                     </fileset>

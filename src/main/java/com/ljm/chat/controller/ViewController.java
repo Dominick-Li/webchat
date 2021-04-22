@@ -17,9 +17,5 @@ public class ViewController {
         return "login";
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "test";
-    }
 
 }
